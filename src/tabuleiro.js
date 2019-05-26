@@ -3,10 +3,12 @@
 
 import React, { Component } from "react";
 import { withStyles } from '@material-ui/core/styles';
+import Formulario from './formulario';
 
 //Material UI
 import Grid from "@material-ui/core/Grid";
 
+//css
 const styles = {
     grid:{
         width:"100%",
@@ -23,7 +25,7 @@ class Tabuleiro extends Component {   //componente do React
         super(props)
 
         this.state = {
-            tabuleiro:[[1,0,1],[0,1,0]]
+            tabuleiro:[[1,0,1],[0,1,0],[1,0,1]]
         }
         this.props = props;
     }
@@ -46,4 +48,5 @@ class Tabuleiro extends Component {   //componente do React
     </Grid>
     )}  
 }
+//exportar com css(withStyles)
 export default withStyles(styles)(Tabuleiro);
