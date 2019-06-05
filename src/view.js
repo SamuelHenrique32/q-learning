@@ -7,8 +7,10 @@ import Formulario from './formulario'
 //Material UI
 import Grid from "@material-ui/core/Grid";
 
+
 class View extends Component {   //componente do React
 
+   
     render() {
         return (
             <Grid container>
