@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import { withStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import Tabuleiro from './tabuleiro'
 import Formulario from './formulario'
 

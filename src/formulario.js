@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 
 //Material UI
 import Grid from "@material-ui/core/Grid";
+import qLearning from "./QLearning";
 
 const styles = {
 
@@ -14,18 +15,23 @@ class Formulario extends Component {   //componente do React
         super(props)
 
         this.state = {
-            taxa: 0
+            taxa: 0,
+
         }
         this.props = props;
         //adicionar this ao contexto atual, volta p contexto depois do evento
         this.changeTaxa = this.changeTaxa.bind(this);
+
+        
+
     }
 
+    
+
     //atualiza variavel ao digitar
-    changeTaxa=event=>{
-        console.log(event.target.value)
+    changeTaxa = event => {
         //evento de alteracao qualquer, le e atualiza taxa do state
-        this.setState({taxa:event.target.value})
+        this.setState({ taxa: event.target.value })
     }
 
     render() {
@@ -38,8 +44,11 @@ class Formulario extends Component {   //componente do React
                         className={classes.textField}
                         margin="normal"
                         value={this.state.taxa}
-                        onChange = {this.changeTaxa}
+                        onChange={this.changeTaxa}
                     />
+                </Grid>
+                <Grid item xs={12}>
+                    Melhor pontuação : {}
                 </Grid>
             </Grid>
 

@@ -3,8 +3,8 @@
 
 import React, { Component } from "react";
 import { withStyles } from '@material-ui/core/styles';
-import Formulario from './formulario';
 import qLearning from "./QLearning";
+import Rating from "./Rating";
 
 //Material UI
 import Grid from "@material-ui/core/Grid";
@@ -34,7 +34,7 @@ class Tabuleiro extends Component {   //componente do React
         //Pega a mensagem vinda do qlearning quando um episodio é adicionado
         //Atualiza o state para renderizar o tabuleiro
         qLearning.on("add_episode", (printtable) => {
-            this.setState({tabuleiro:printtable});
+            this.setState({ tabuleiro: printtable });
         });
         qLearning.start();
     }
@@ -43,15 +43,18 @@ class Tabuleiro extends Component {   //componente do React
         return (
             <Grid container className={classes.grid}>
                 <Grid item xs={12}>
+                    <Rating />
+                </Grid>
+                <Grid item xs={12}>
                     {this.state.tabuleiro.map((v) => {
                         let val = v;
-                        return (<Grid container>
-                            {val.map((v2) => {
-                                let value = v2;
-                                console.log(value);
-                                return (<Grid item xs={1} className={value === 1 ? classes.Colorido : ""}></Grid>)
-                            })}
-                        </Grid>);
+                        return (
+                            <Grid container>
+                                {val.map((v2) => {
+                                    let value = v2;
+                                    return (<Grid item xs={1} className={value === 1 ? classes.Colorido : ""}></Grid>)
+                                })}
+                            </Grid>);
                     })}
                 </Grid>
             </Grid>
