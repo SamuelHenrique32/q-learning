@@ -1,6 +1,5 @@
 import { EventEmitter } from "events";
 
-
 EventEmitter.EventEmitter.defaultMaxListeners = 0;
 
 class QLearning extends EventEmitter {
@@ -33,12 +32,16 @@ class QLearning extends EventEmitter {
         this.indiceAtual = 0;
         //Melhores pontuações
         this.best = [];
+
+        this.confirmBest = [];
         //Pontação atual do melhor movimento
         this.bestScore = 0;
         //Linha best
         this.bestLine = 1;
         //Quantidade minima para verificar solução ótima 
-        this.otima = 5
+        this.otima = 15
+
+        this.confirmOtima = 30
 
         // this.matrizq = [
         //     [null, -10, null, null],
@@ -215,7 +218,7 @@ class QLearning extends EventEmitter {
             [null, null, null, null]
         ]
         //Número de colunas
-        this.ncols =10;
+        this.ncols = 10;
 
     };
 
@@ -265,6 +268,7 @@ class QLearning extends EventEmitter {
     //Termina de calcular os episódeos
     finish() {
         this.isExecuting = false;
+        this.qLearning();
     };
 
     //Calcula a taxa atual de aleatoriedade
@@ -330,9 +334,9 @@ class QLearning extends EventEmitter {
 
     //Retorna as movimentações possíveis excluindo o null , o inicio e a posição anterior
     notNull(linha) {
-      
+
         return this.matrizq[linha].map((element) => {
-            if (element !== null && element !== 1 ) {
+            if (element !== null && element !== 1) {
                 return element
             } else {
                 return -100000
@@ -429,9 +433,7 @@ class QLearning extends EventEmitter {
     setIndex() {
         let index = 0;
         let notNull = this.notNull(this.linhaAtual);
-        console.log("Not null:"+notNull);
         let maior = this.escolheMaior(notNull);
-        console.log("Maior:"+maior);
         if (this.isEquals() || this.isLess()) {
             index = this.escolheAletorio();
             this.totalAletorio = this.totalAletorio + 1;
@@ -471,17 +473,13 @@ class QLearning extends EventEmitter {
         while (this.isExecuting) {
             //vai executar enquanto não chegar no fim
             while (!this.isFinal(this.linhaAtual)) {
-                console.log("Linha Atual:"+this.linhaAtual)
                 //Seta a direção do próximo movimento
                 this.indiceAtual = this.setIndex();
-                console.log("Indice Atual:"+this.indiceAtual)
-
-                
                 //Seta a linha equivalente ao próximo movimento
                 let proxlinha = this.movimentar();
-                console.log("Prox"+proxlinha)
                 //Calcula o valor q 
-                this.matrizq[this.linhaAtual][this.indiceAtual] = this.calculaQ(proxlinha);
+                let q = this.calculaQ(proxlinha);
+                this.matrizq[this.linhaAtual][this.indiceAtual] = q;
                 //Troca a linha 
                 this.linhaAtual = proxlinha;
                 //Seta a coluna/linha a ser printada
@@ -492,11 +490,10 @@ class QLearning extends EventEmitter {
             this.emit("add_episode", this.print);
             this.finish();
 
-
             setTimeout(() => {
                 this.verificarMaximo()
                 this.start();
-            }, 2000);
+            }, 1000);
 
         }
 
@@ -504,23 +501,33 @@ class QLearning extends EventEmitter {
     }
 
     verificarMaximo() {
+        console.log(Math.min.apply(null, this.pontuacao))
+        if (this.confirmBest.length > this.confirmOtima - 1) {
+            this.confirmBest.push(Math.min.apply(null, this.pontuacao));
+            this.confirmBest.splice(0, 1);
+            if (this.isEqualsBest(this.confirmBest)) {
+                this.emit("otima")
+            }
+        } else {
+            this.confirmBest.push(Math.min.apply(null, this.pontuacao));
+
+        }
+
         if (this.best.length > this.otima - 1) {
             this.best.push(Math.min.apply(null, this.pontuacao));
             this.best.splice(0, 1);
             if (this.isEqualsBest(this.best)) {
-                return true
-            }else{
-                return false;
+                this.emit("possivel")
             }
-        }else{
+        } else {
             this.best.push(Math.min.apply(null, this.pontuacao));
-            return false
         }
 
-       
 
 
-        
+
+
+
     }
 }
 

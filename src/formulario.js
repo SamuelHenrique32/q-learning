@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 
 //Material UI
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 import qLearning from "./QLearning";
 import Button from "@material-ui/core/Button";
 
@@ -20,7 +21,8 @@ class Formulario extends Component {   //componente do React
             taxa: qLearning.propagacao,
             aleatoriadade: qLearning.porcentagem,
             otima: qLearning.otima,
-            isBest: false
+            isBest: false,
+            isPossible: false
         };
 
 
@@ -29,12 +31,12 @@ class Formulario extends Component {   //componente do React
         this.changeTaxa = this.changeTaxa.bind(this);
         this.changeAleatoriedade = this.changeAleatoriedade.bind(this);
         this.changeOtima = this.changeOtima.bind(this);
-       
+
 
 
 
     }
-    
+
     onClickExecuting() {
         if (qLearning.isExecuting) {
             qLearning.finish()
@@ -69,6 +71,11 @@ class Formulario extends Component {   //componente do React
     componentWillMount() {
         qLearning.on("otima", (n) => {
             this.setState({ isBest: true })
+            qLearning.finish();
+        })
+
+        qLearning.on("possivel", (n) => {
+            this.setState({ isPossible: true })
         })
     }
 
@@ -107,23 +114,26 @@ class Formulario extends Component {   //componente do React
                     />
                 </Grid>
 
-                {/* <Grid item xs={12} >
-                    <Grid container>
-                        <Grid item xs={6} >
-                            <Button onClick={()=>this.onClickExecuting}>{qLearning.isExecuting?"Parar":"Iniciar"}</Button>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Button onClick={()=>this.onClickSave}>Salvar Alterações</Button>
-                        </Grid>
-                    </Grid>
-                </Grid> */}
+
                 <Grid item xs={12} >
-                    {this.state.isBest ? "Você atingiu a solução ótima !!!" : ""}
+                    {this.state.isBest ? (<Grid>
+                        <Typography variant="p">"Você atingiu a solução ótima !!!"</Typography>
+                        <Typography variant="p">
+                            Iteração: {qLearning.pontuacao.indexOf(qLearning.confirmBest[0])}
+                        </Typography> </Grid>) :
+                        this.state.isPossible ? (
+                            <Grid>
+                                <Typography variant="p">
+                                    Possível solução encontrada
+                                </Typography>
+
+                            </Grid>) : ""}
                 </Grid>
             </Grid>
-
 
         )
     }
 }
+
+
 export default withStyles(styles)(Formulario);

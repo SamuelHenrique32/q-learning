@@ -18,6 +18,9 @@ const styles = {
     Colorido: {
         minHeight: "10vh",
         backgroundColor: "red"
+    },
+    branco:{
+        backgroundColor: "white"
     }
 }
 
@@ -41,7 +44,7 @@ class Tabuleiro extends Component {   //componente do React
     render() {
         const { classes } = this.props
         return (
-            <Grid container className={classes.grid}>
+            <Grid container className={classes.grid} justify="center">
                 <Grid item xs={12}>
                     <Rating />
                 </Grid>
@@ -52,7 +55,7 @@ class Tabuleiro extends Component {   //componente do React
                             <Grid container>
                                 {val.map((v2) => {
                                     let value = v2;
-                                    return (<Grid item xs={1} className={value === 1 ? classes.Colorido : ""}></Grid>)
+                                    return (<Grid item xs={1} className={value === 1 ? classes.Colorido : classes.branco}></Grid>)
                                 })}
                             </Grid>);
                     })}
