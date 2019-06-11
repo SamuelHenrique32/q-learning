@@ -1,4 +1,6 @@
 import { EventEmitter } from "events";
+
+
 EventEmitter.EventEmitter.defaultMaxListeners = 0;
 
 class QLearning extends EventEmitter {
@@ -8,7 +10,7 @@ class QLearning extends EventEmitter {
         //Estado de execução
         this.isExecuting = true;
         //Posição inicial 
-        this.posicaoinicial = 1;
+        this.posicaoinicial = 40;
         //Taxa de aleatoriedade
         this.porcentagem = 30;
         //Taxa de propagação 
@@ -35,6 +37,76 @@ class QLearning extends EventEmitter {
         this.bestScore = 0;
         //Linha best
         this.bestLine = 1;
+        //Quantidade minima para verificar solução ótima 
+        this.otima = 5
+
+        // this.matrizq = [
+        //     [null, -10, null, null],
+        //     [null, -100, -10, -10],
+        //     [null, -10, null, null],
+        //     [-10, -10, -100, null],
+        //     [null, -10, -10, -10],
+        //     [-10, 100, null, -100],
+        //     [-10, null, -10, null],
+        //     [-100, null, 100, -10],
+        //     [null, null, null, null]
+        // ];
+
+        this.matrizq = [
+            [null, -1, -1, null],        //5    0
+            [null, -100, -1, -1],        //6    1
+            [null, -100, -1, -1],        //15   2
+            [null, -1, -1, -1],          //16   3   
+            [null, -100, -1, -1],        //25   4
+            [null, -100, -1, -1],        //26   5
+            [null, -1, -1, -1],          //35   6
+            [null, -100, -1, -1],        //36   7
+            [null, -1, -1, -1],          //45   8
+            [null, -1, null, -1],        //46   9
+            [-1, -1, -100, null],        //4    10
+            [-1, -1, -100, -1],          //7    11
+            [-1, -1, -1, -100],          //14   12
+            [-1, -1, -100, -100],        //17   13
+            [-1, -1, -100, -1],          //24   14
+            [-1, -1, -1, -100],          //27   15
+            [-1, -1, -100, -100],        //34   16
+            [-1, -1, -1, -1],            //37   17
+            [-1, -1, -1, -100],          //44   18  
+            [-1, -1, null, -1],          //47   19
+            [-1, -1, -1, null],          //3    20
+            [-100, -1, -1, -1],          //8    21
+            [-100, -1, -1, -1],          //13   22
+            [-1, -100, -1, -1],          //18   23
+            [-100, -1, -1, -1],          //23   24
+            [-100, -1, -1, -1],          //28   25  
+            [-1, -1, -1, -1],            //33   26
+            [-100, -100, -1, -1],        //38   27
+            [-1, -1, -1, -1],            //43   28
+            [-1, -1, null, -1],          //48   29
+            [-1, null, -1, null],        //2    30
+            [-1, -100, -1, -1],          //9    31
+            [-1, -100, -100, -1],        //12   32
+            [-1, -100, -1, -1],          //19   33
+            [-1, -100, -1, -100],        //22   34
+            [-1, -100, -1, -1],          //29   35
+            [-1, -100, -100, -1],        //32   36
+            [-1, -100, -1, -1],          //39   37
+            [-1, -100, -1, -100],        //42   38
+            [-1, 100, null, -1],         //49   39
+            [-1, null, -100, null],      //1    40
+            [-1, null, -100, null],      //10   41
+            [-1, null, -100, -100],      //11   42
+            [-100, null, -100, -100],    //20   43
+            [-1, null, -100, -100],      //21   44
+            [-1, null, -100, -100],      //30   45
+            [-1, null, -100, -100],      //31   46
+            [-100, null, -100, -100],    //40   47  
+            [-1, null, 100, -100],       //41   48
+            [null, null, null, null]     //50   49
+        ];
+        //Número de colunas
+        this.ncols = 10;
+
 
         //Matriz Q
         //TODO
@@ -94,6 +166,43 @@ class QLearning extends EventEmitter {
         //     [-1, -1, null, -1],               //48
         //     [-1, 100, null, -1],              //49
         //     [null, null, null, null]]      //50
+
+    };
+
+    //Reverte a matriz q para a original
+    init() {
+        //Estado de execução
+        this.isExecuting = true;
+        //Posição inicial 
+        this.posicaoinicial = 1;
+        //Taxa de aleatoriedade
+        this.porcentagem = 30;
+        //Taxa de propagação 
+        this.propagacao = 0.5;
+        //Número de escolhas aleatórias
+        this.totalAletorio = 0;
+        //Número total de escolhas
+        this.total = 0;
+        //Pontuação do episodio
+        this.pontuacaoAtual = 0;
+        //Todos os episódios calculados
+        this.episodios = [];
+        //Vetor pontuação máxima
+        this.pontuacao = [];
+        //Matriz para pintar na tela
+        this.print = [];
+        //Linha atual da matriz q
+        this.linhaAtual = 1;
+        //índice atual da matriz q
+        this.indiceAtual = 0;
+        //Melhores pontuações
+        this.best = [];
+        //Pontação atual do melhor movimento
+        this.bestScore = 0;
+        //Linha best
+        this.bestLine = 1;
+        //Quantidade minima para verificar solução ótima 
+        this.otima = 5
         this.matrizq = [
             [null, -10, null, null],
             [null, -100, -10, -10],
@@ -105,9 +214,9 @@ class QLearning extends EventEmitter {
             [-100, null, 100, -10],
             [null, null, null, null]
         ]
-
         //Número de colunas
-        this.ncols = this.matrizq[0].length - 1;
+        this.ncols =10;
+
     };
 
     //Verifica se os elementos da linha são iguais
@@ -123,18 +232,27 @@ class QLearning extends EventEmitter {
     };
 
     isEqualsBest(arr) {
-        return arr.every((value, index, array) => {
-            if (value === null || index === 0) {
-                return true;
-            } else {
-                return value === array[index - 1];
-            }
-        });
+        if (arr.length === 1) {
+            return false
+        } else {
+            return arr.every((value, index, array) => {
+                if (index === 0) {
+                    return true;
+                } else {
+                    return value === array[index - 1];
+                }
+            });
+        }
+
     };
 
     //Retorna se chegou na posição final
     isFinal(linha) {
-        return this.matrizq[linha].every((element) => { return element === null })
+        if (this.matrizq[linha] === undefined) {
+            return false;
+        } else {
+            return this.matrizq[linha].every((element) => { return element === null })
+        }
     };
 
     //Começa a calcular os episódios
@@ -181,7 +299,7 @@ class QLearning extends EventEmitter {
 
     //Limpa a matriz de print
     clearEnablePrint() {
-        for (var i = 0; i < this.matrizq[0].length - 1; i++) {
+        for (var i = 0; i < this.matrizq.length - 1; i++) {
             this.print.push([0, 0, 0, 0])
 
         };
@@ -212,16 +330,17 @@ class QLearning extends EventEmitter {
 
     //Retorna as movimentações possíveis excluindo o null , o inicio e a posição anterior
     notNull(linha) {
+      
         return this.matrizq[linha].map((element) => {
-            if (element !== null && element !== 1 && this.matrizq[this.linhaAtual].indexOf(element) !== this.indiceAtual) {
+            if (element !== null && element !== 1 ) {
                 return element
             } else {
-                return -1000
+                return -100000
             }
         })
     }
 
-    notNullBest(linha,ind) {
+    notNullBest(linha, ind) {
         return this.matrizq[linha].map((element) => {
             if (element !== null && element !== 1 && this.matrizq[this.bestLine].indexOf(element) !== ind) {
                 return element
@@ -310,7 +429,9 @@ class QLearning extends EventEmitter {
     setIndex() {
         let index = 0;
         let notNull = this.notNull(this.linhaAtual);
+        console.log("Not null:"+notNull);
         let maior = this.escolheMaior(notNull);
+        console.log("Maior:"+maior);
         if (this.isEquals() || this.isLess()) {
             index = this.escolheAletorio();
             this.totalAletorio = this.totalAletorio + 1;
@@ -327,7 +448,7 @@ class QLearning extends EventEmitter {
 
     setBestIndex(ind) {
         let index = 0;
-        let notNull = this.notNullBest(this.bestLine,ind);
+        let notNull = this.notNullBest(this.bestLine, ind);
         let maior = this.escolheMaior(notNull);
         if (this.repetido(notNull, maior)) {
             index = this.matrizq[this.bestLine].indexOf(maior);
@@ -350,10 +471,15 @@ class QLearning extends EventEmitter {
         while (this.isExecuting) {
             //vai executar enquanto não chegar no fim
             while (!this.isFinal(this.linhaAtual)) {
+                console.log("Linha Atual:"+this.linhaAtual)
                 //Seta a direção do próximo movimento
                 this.indiceAtual = this.setIndex();
+                console.log("Indice Atual:"+this.indiceAtual)
+
+                
                 //Seta a linha equivalente ao próximo movimento
                 let proxlinha = this.movimentar();
+                console.log("Prox"+proxlinha)
                 //Calcula o valor q 
                 this.matrizq[this.linhaAtual][this.indiceAtual] = this.calculaQ(proxlinha);
                 //Troca a linha 
@@ -366,8 +492,9 @@ class QLearning extends EventEmitter {
             this.emit("add_episode", this.print);
             this.finish();
 
-            //this.verificarMaximo();
+
             setTimeout(() => {
+                this.verificarMaximo()
                 this.start();
             }, 2000);
 
@@ -377,40 +504,24 @@ class QLearning extends EventEmitter {
     }
 
     verificarMaximo() {
-
-        let ind = 0;
-        this.bestLine = 1;
-
-        while (!this.isFinal(this.bestLine)) {
-            //Seta a direção do próximo movimento
-            ind = this.setBestIndex(ind);
-            //Seta a linha equivalente ao próximo movimento
-            let proxlinha = this.movimentarBest(ind);
-            //Troca a linha 
-            this.bestLine = proxlinha;
-        };
-
-        if (this.best.length > 5) {
-            this.best.pop();
-        };
-
-        this.best.push(this.bestScore);
-
-
-        if (this.isEqualsBest(this.best)) {
-            console.log(true);
-            return true;
-        } else {
-            console.log(false);
-            return false;
+        if (this.best.length > this.otima - 1) {
+            this.best.push(Math.min.apply(null, this.pontuacao));
+            this.best.splice(0, 1);
+            if (this.isEqualsBest(this.best)) {
+                return true
+            }else{
+                return false;
+            }
+        }else{
+            this.best.push(Math.min.apply(null, this.pontuacao));
+            return false
         }
 
+       
+
+
+        
     }
-
-    
-
-
-
 }
 
 

@@ -41,10 +41,10 @@ class Rating extends Component {   //componente do React
                    Iterações: {this.state.iteracoes} 
                 </Grid>
                 <Grid item xs={3}>
-                   Pontuação Máxima: {this.state.maximo}
+                   Pontuação Mínima: {this.state.maximo}
                 </Grid>
                 <Grid item xs={3}>
-                   Mínimo: {this.state.maior} %
+                   Máxima: {this.state.maior} %
                 </Grid>
                 <Grid item xs={3}>
                    Aleatório: {this.state.aleatorio} %
