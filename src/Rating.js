@@ -27,8 +27,8 @@ class Rating extends Component {   //componente do React
         qlearning.on("add_episode", () => {
             this.setState({iteracoes:qlearning.episodios.length});
             this.setState({maximo:Math.min.apply(null, qlearning.pontuacao)});
-            this.setState({aleatorio: qlearning.calculaTaxaAleatorio()});
-            this.setState({maior:100-qlearning.calculaTaxaAleatorio()});
+            this.setState({aleatorio: qlearning.calculaTaxaAleatorio().toFixed(2)});
+            this.setState({maior:100-qlearning.calculaTaxaAleatorio().toFixed(2)});
         });
     };
 

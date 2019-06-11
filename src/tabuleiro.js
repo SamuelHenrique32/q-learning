@@ -8,20 +8,22 @@ import Rating from "./Rating";
 
 //Material UI
 import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
 
 //css
 const styles = {
     grid: {
         width: "100%",
-        height: "100%"
+        height: "100%",
+        marginLeft: 100,
+        marginTop: 50
     },
     Colorido: {
         minHeight: "10vh",
-        backgroundColor: "red"
+        backgroundColor: "red",
+        borderStyle: "solid"
     },
-    branco:{
-        backgroundColor: "white"
-    }
+
 }
 
 class Tabuleiro extends Component {   //componente do React
@@ -37,14 +39,26 @@ class Tabuleiro extends Component {   //componente do React
         //Pega a mensagem vinda do qlearning quando um episodio é adicionado
         //Atualiza o state para renderizar o tabuleiro
         qLearning.on("add_episode", (printtable) => {
-            this.setState({ tabuleiro: printtable });
+            this.setState({ tabuleiro: [] }, () => {
+                this.setState({ tabuleiro: printtable });
+            })
         });
         qLearning.start();
     }
     render() {
         const { classes } = this.props
         return (
-            <Grid container className={classes.grid} justify="center">
+            <Grid container className={classes.grid} justify="center" >
+                <Grid item xs={12}>
+                    <Typography variant="h4" >
+                        Q-Learning
+                </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                    <Typography variant="h5" >
+                        Maria Carolina e Samuel
+                </Typography>
+                </Grid>
                 <Grid item xs={12}>
                     <Rating />
                 </Grid>
@@ -55,10 +69,16 @@ class Tabuleiro extends Component {   //componente do React
                             <Grid container>
                                 {val.map((v2) => {
                                     let value = v2;
-                                    return (<Grid item xs={1} className={value === 1 ? classes.Colorido : classes.branco}></Grid>)
+                                    return (<Grid item xs={1} className={value === 1 ? classes.Colorido : ""}></Grid>)
                                 })}
                             </Grid>);
                     })}
+                </Grid>
+                <Grid item xs={12}>
+                    <Grid container>
+                        {qLearning.pontuacao.map((v) => { return(<Grid item xs={1}>{v}</Grid>) })}
+                    </Grid>
+
                 </Grid>
             </Grid>
         )
