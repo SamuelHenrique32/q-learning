@@ -7,7 +7,7 @@
     "material-ui": "^0.20.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-native": "^0.59.8",
+    "react-native": "^0.62.3",
     "react-scripts": "3.0.1",
     "react-with-styles": "^3.2.1"
   },
